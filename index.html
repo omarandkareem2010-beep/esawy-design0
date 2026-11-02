@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Esawy Design</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;color:white;font-family:Arial,sans-serif;
+ background:radial-gradient(ellipse at top,#24134c,#090817 65%,#03030b);
+ min-height:100vh;overflow-x:hidden
+}
+body:before{
+ content:"";position:fixed;inset:0;pointer-events:none;
+ background-image:radial-gradient(white 1px,transparent 1px);
+ background-size:45px 45px;opacity:.22
+}
+header{
+ display:flex;justify-content:space-between;align-items:center;
+ padding:20px 6%;position:relative;z-index:2
+}
+.logo{font-size:25px;font-weight:bold;color:#b99aff}
+button{
+ cursor:pointer;border:0;border-radius:12px;padding:12px 18px;
+ color:white;background:linear-gradient(120deg,#783cff,#bd55ff);
+ font-weight:bold
+}
+.hero{
+ text-align:center;padding:75px 15px 55px;position:relative
+}
+.hero h1{font-size:clamp(38px,8vw,70px);margin:10px 0;color:#d6c1ff;
+ text-shadow:0 0 30px #974cff}
+.hero p{color:#c4bbdb;line-height:1.9}
+.planet{
+ width:130px;height:130px;margin:0 auto 25px;border-radius:50%;
+ background:radial-gradient(circle at 30% 25%,#e5caff,#8648db 40%,#241044 75%);
+ box-shadow:0 0 55px #884bff;animation:float 5s ease-in-out infinite
+}
+@keyframes float{50%{transform:translateY(-15px) rotate(8deg)}}
+section{padding:30px 6%;position:relative;z-index:1}
+.section-title{text-align:center;font-size:30px;color:#d7c4ff}
+.categories,.projects{
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+ gap:22px;margin-top:30px
+}
+.category,.project{
+ background:linear-gradient(145deg,#21163b,#100d20);
+ border:1px solid #6942a5;border-radius:20px;overflow:hidden;
+ box-shadow:0 12px 35px #0008;transition:.3s
+}
+.category:hover,.project:hover{transform:translateY(-8px);box-shadow:0 15px 35px #783cff55}
+.category img,.project img{width:100%;height:180px;object-fit:cover}
+.category h3,.project h3{padding:0 16px;color:#d9c5ff}
+.category p,.project p{padding:0 16px;color:#c2bad0;line-height:1.7}
+.project a{display:inline-block;margin:0 16px 18px;color:#c5a4ff}
+.actions{padding:0 16px 18px;display:flex;gap:8px;flex-wrap:wrap}
+#adminPanel{
+ display:none;max-width:650px;margin:25px auto;padding:22px;
+ background:#171129;border:1px solid #7950b9;border-radius:18px
+}
+input,textarea,select{
+ width:100%;padding:13px;margin:8px 0 15px;border-radius:10px;
+ border:1px solid #66508d;background:#0d0a19;color:white
+}
+label{color:#d6c4ff}
+.hidden{display:none!important}
+footer{text-align:center;padding:35px;color:#aaa}
+.whatsapp{display:inline-block;text-decoration:none;margin-top:18px}
+@media(max-width:500px){header{padding:15px}.hero{padding-top:55px}}
+</style>
+</head>
+<body>
+
+<header>
+ <div class="logo">ESAWY DESIGN</div>
+ <button onclick="showLogin()">Admin</button>
+</header>
+
+<div class="hero">
+ <div class="planet"></div>
+ <h1>Esawy Design</h1>
+ <p>نحوّل أفكارك إلى منصات إلكترونية احترافية<br>
+ تصميم منصات للمدرسين والمطاعم والكافيهات</p>
+ <a class="whatsapp" href="https://wa.me/201105257179">
+  <button>تواصل معنا عبر واتساب</button>
+ </a>
+</div>
+
+<section>
+ <h2 class="section-title">خدماتنا</h2>
+ <div class="categories">
+  <div class="category">
+   <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=700" alt="منصات المدرسين">
+   <h3>منصات المدرسين</h3><p>منصات تعليمية لعرض الدروس والخدمات.</p>
+  </div>
+  <div class="category">
+   <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=700" alt="منصات المطاعم">
+   <h3>منصات المطاعم</h3><p>مواقع احترافية لعرض الأطعمة والخدمات.</p>
+  </div>
+  <div class="category">
+   <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=700" alt="منصات الكافيهات">
+   <h3>منصات الكافيهات</h3><p>مواقع عصرية لعرض المنتجات والمنيو.</p>
+  </div>
+ </div>
+</section>
+
+<section>
+ <h2 class="section-title">أعمالنا ومشاريعنا</h2>
+ <div id="projects" class="projects">
+  <p>جاري تحميل المشاريع...</p>
+ </div>
+</section>
+
+<div id="adminPanel">
+ <h2>لوحة تحكم الأدمن</h2>
+ <div id="loginArea">
+  <label>البريد الإلكتروني</label>
+  <input id="email" type="email" placeholder="البريد الإلكتروني">
+  <label>كلمة المرور</label>
+  <input id="password" type="password" placeholder="كلمة المرور">
+  <button onclick="login()">تسجيل الدخول</button>
+ </div>
+
+ <div id="editor" class="hidden">
+  <h3>إضافة مشروع جديد</h3>
+  <input id="title" placeholder="اسم المشروع">
+  <textarea id="description" placeholder="وصف المشروع"></textarea>
+  <select id="category">
+   <option value="teachers">مدرسين</option>
+   <option value="restaurants">مطاعم</option>
+   <option value="cafes">كافيهات</option>
+  </select>
+  <label>صورة المشروع</label>
+  <input id="photo" type="file" accept="image/*">
+  <input id="projectUrl" placeholder="رابط المشروع (اختياري)">
+  <button onclick="saveProject()">نشر المشروع</button>
+  <button onclick="logout()" style="background:#633">تسجيل الخروج</button>
+  <p id="message"></p>
+ </div>
+</div>
+
+<footer>
+ Esawy Design © 2026
+</footer>
+
+<script>
+// ضع بيانات مشروع Supabase هنا لاحقاً
+const SUPABASE_URL = "ضع_رابط_مشروعك_هنا";
+const SUPABASE_KEY = "ضع_مفتاح_anon_public_هنا";
+
+let db = null;
+let editingId = null;
+
+if(SUPABASE_URL.startsWith("https://") &&
+   !SUPABASE_KEY.startsWith("ضع_")){
+ db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+}
+
+function showLogin(){
+ document.getElementById("adminPanel").style.display="block";
+ document.getElementById("adminPanel").scrollIntoView({behavior:"smooth"});
+}
+
+async function login(){
+ if(!db){alert("يجب إعداد بيانات Supabase أولاً");return}
+ const email=document.getElementById("email").value;
+ const password=document.getElementById("password").value;
+ const {error}=await db.auth.signInWithPassword({email,password});
+ if(error){alert("تعذر تسجيل الدخول: "+error.message);return}
+ checkAdmin();
+}
+
+async function checkAdmin(){
+ if(!db)return;
+ const {data}=await db.auth.getUser();
+ const isAdmin=data.user?.email==="omarandkareem2010@gmail.com";
+ document.getElementById("loginArea").classList.toggle("hidden",isAdmin);
+ document.getElementById("editor").classList.toggle("hidden",!isAdmin);
+ if(isAdmin)loadProjects();
+}
+
+async function logout(){
+ await db.auth.signOut();
+ location.reload();
+}
+
+async function loadProjects(){
+ if(!db)return;
+ const box=document.getElementById("projects");
+ const {data,error}=await db.from("projects").select("*").order("created_at",{ascending:false});
+ if(error){box.innerHTML="<p>تعذر تحميل المشاريع.</p>";return}
+ if(!data.length){box.innerHTML="<p>لا توجد مشاريع منشورة حالياً.</p>";return}
+ box.innerHTML="";
+ const {data:userData}=await db.auth.getUser();
+ const admin=userData.user?.email==="omarandkareem2010@gmail.com";
+ data.forEach(p=>{
+  const card=document.createElement("div");
+  card.className="project";
+  const img=document.createElement("img");
+  img.src=p.image_url||"";
+  img.alt=p.title;
+  const h=document.createElement("h3");h.textContent=p.title;
+  const desc=document.createElement("p");desc.textContent=p.description||"";
+  card.append(img,h,desc);
+  if(p.project_url){
+   const a=document.createElement("a");a.href=p.project_url;
+   a.target="_blank";a.rel="noopener";a.textContent="زيارة المشروع";
+   card.append(a);
+  }
+  if(admin){
+   const actions=document.createElement("div");actions.className="actions";
+   const edit=document.createElement("button");edit.textContent="تعديل";
+   edit.onclick=()=>editProject(p);
+   const del=document.createElement("button");del.textContent="حذف";
+   del.style.background="#633";del.onclick=()=>deleteProject(p.id);
+   actions.append(edit,del);card.append(actions);
+  }
+  box.append(card);
+ });
+}
+
+async function saveProject(){
+ if(!db)return;
+ const {data:userData}=await db.auth.getUser();
+ if(userData.user?.email!=="omarandkareem2010@gmail.com"){
+  alert("غير مسموح");return;
+ }
+ const title=document.getElementById("title").value.trim();
+ const description=document.getElementById("description").value.trim();
+ const category=document.getElementById("category").value;
+ const file=document.getElementById("photo").files[0];
+ const projectUrl=document.getElementById("projectUrl").value.trim();
+ if(!title){alert("اكتب اسم المشروع");return}
+ let imageUrl=null;
+ if(file){
+  const path=Date.now()+"-"+file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+  const {error:uploadError}=await db.storage.from("project-images").upload(path,file);
+  if(uploadError){alert("خطأ في رفع الصورة: "+uploadError.message);return}
+  imageUrl=db.storage.from("project-images").getPublicUrl(path).data.publicUrl;
+ }
+ const values={title,description,category,project_url:projectUrl};
+ if(imageUrl)values.image_url=imageUrl;
+ let result;
+ if(editingId){
+  result=await db.from("projects").update(values).eq("id",editingId);
+ }else{
+  if(!imageUrl){alert("اختار صورة للمشروع");return}
+  values.image_url=imageUrl;
+  result=await db.from("projects").insert(values);
+ }
+ if(result.error){alert("تعذر حفظ المشروع: "+result.error.message);return}
+ editingId=null;
+ document.getElementById("title").value="";
+ document.getElementById("description").value="";
+ document.getElementById("photo").value="";
+ document.getElementById("projectUrl").value="";
+ document.getElementById("message").textContent="تم حفظ المشروع";
+ loadProjects();
+}
+
+function editProject(p){
+ editingId=p.id;
+ document.getElementById("title").value=p.title||"";
+ document.getElementById("description").value=p.description||"";
+ document.getElementById("category").value=p.category||"teachers";
+ document.getElementById("projectUrl").value=p.project_url||"";
+ document.getElementById("message").textContent="اختار صورة جديدة إذا أردت تغيير الصورة، ثم اضغط نشر المشروع";
+ document.getElementById("adminPanel").scrollIntoView({behavior:"smooth"});
+}
+
+async function deleteProject(id){
+ if(!confirm("هل تريد حذف المشروع؟"))return;
+ const {error}=await db.from("projects").delete().eq("id",id);
+ if(error){alert(error.message);return}
+ loadProjects();
+}
+
+if(db){
+ db.auth.onAuthStateChange(()=>checkAdmin());
+ loadProjects();
+ checkAdmin();
+}else{
+ document.getElementById("projects").innerHTML="<p>سيتم عرض المشاريع بعد ربط قاعدة البيانات.</p>";
+}
+</script>
+</body>
+  </html>
